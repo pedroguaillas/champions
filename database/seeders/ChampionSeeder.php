@@ -31,6 +31,21 @@ class ChampionSeeder extends Seeder
                 'name' => 'Mujeres',
                 'inscription' => 30,
                 'gender' => 'femenino'
+            ],
+            [
+                'name' => 'Sub 17 Hombres',
+                'inscription' => 15,
+                'gender' => 'masculino'
+            ],
+            [
+                'name' => 'Sub 12 Hombres',
+                'inscription' => 15,
+                'gender' => 'masculino'
+            ],
+            [
+                'name' => 'Post 40 Hombres',
+                'inscription' => 33,
+                'gender' => 'masculino'
             ]
         ]);
     }
