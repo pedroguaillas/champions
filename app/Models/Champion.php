@@ -15,4 +15,9 @@ class Champion extends Model
     {
         return $this->hasMany(Category::class);
     }
+
+    public function progress()
+    {
+        return $this->hasMany(Progress::class);
+    }
 }

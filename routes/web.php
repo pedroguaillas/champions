@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\PlayerController;
+use App\Http\Livewire\ListGames;
 use App\Http\Livewire\Team\Index;
 use Illuminate\Support\Facades\Route;
 
@@ -28,7 +30,9 @@ Route::middleware([
     })->name('dashboard');
 });
 
-Route::get('grupos', Index::class);
+Route::get('clubes', Index::class);
+Route::get('club/{team_id}/jugadores', [PlayerController::class, 'index'])->name('jugadores');
+Route::get('partidos', ListGames::class);
 
 Auth::routes();
 

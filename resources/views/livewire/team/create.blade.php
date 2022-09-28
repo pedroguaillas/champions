@@ -1,49 +1,40 @@
 <div>
 
-    <button class="btn btn-success" data-toggle="modal" data-target="#modalwindow">+</button>
+    <x-adminlte-button label="+" theme="success" data-toggle="modal" data-target="#modal" />
 
-    <x-adminlte-modal id="modalwindow" wire:ignore role="dialog" theme="green" icon="fas fa-users-medical" title="Registro de club">
-        <form wire:submit.prevent="store">
-            <div class="modal-body">
+    <x-adminlte-modal id="modal" wire:ignore.self theme="green" icon="fas fa-users-medical" title="Registro de club">
 
-                <div class="form-group row">
-                    <label class="control-label col-sm-4" for="name">Nombre</label>
-                    <div class="col-sm-8">
-                        <input type="text" wire:model="name" class="form-control form-control-sm" required>
-                    </div>
+        <div class="row">
+            <x-adminlte-input name="name" wire:model.defer="name" label="Nombre del club" placeholder="Claudio" fgroup-class="col-md" disable-feedback />
+        </div>
+        <x-jet-input-error for="name" />
+
+        <div class="row">
+            <x-adminlte-input name="address" wire:model.defer="address" label="Comunidad" placeholder="Langa" fgroup-class="col-md" disable-feedback />
+        </div>
+        <x-jet-input-error for="address" />
+
+        <div class="row">
+            <div class="form-group col-md">
+                <label for="category_id">Categoría</label>
+                <div class="input-group">
+                    <select class="form-control" wire:model.defer="category_id" required>
+                        @foreach($categories as $category)
+                        <option value="{{$category->id}}">{{$category->name}}</option>
+                        @endforeach
+                    </select>
                 </div>
-
-                <div class="form-group row">
-                    <label class="control-label col-sm-4" for="address">Comunidad</label>
-                    <div class="col-sm-8">
-                        <input type="text" wire:model="address" class="form-control form-control-sm" required>
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <label class="control-label col-sm-4" for="category_id">Categoria</label>
-                    <div class="col-sm-8">
-                        <select class="custom-select form-control form-control-sm" wire:model="category_id" required>
-                            @foreach($categories as $category)
-                            <option value="{{$category->id}}">{{$category->name}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <label class="control-label col-sm-4" for="paid">Pagado</label>
-                    <div class="col-sm-8">
-                        <input type="text" wire:model="paid" class="form-control form-control-sm" required>
-                    </div>
-                </div>
-
             </div>
+        </div>
 
-            <x-slot name="footerSlot">
-                <x-adminlte-button style="height: 3em;" wire:click="store" theme="success" icon="fas fa-lg fa-save" />
-            </x-slot>
-        </form>
+        <div class="row">
+            <x-adminlte-input name="paid" wire:model.defer="paid" label="Pagado" fgroup-class="col-md" disable-feedback />
+        </div>
+        <x-jet-input-error for="paid" />
+
+        <x-slot name="footerSlot">
+            <x-adminlte-button style="height: 3em;" wire:click="store" theme="success" icon="fas fa-lg fa-save" />
+        </x-slot>
     </x-adminlte-modal>
 
 </div>

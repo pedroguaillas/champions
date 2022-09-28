@@ -313,12 +313,12 @@ return [
         ],
         [
             'text'        => 'Partidos',
-            'url'         => '#',
+            'url'         => 'partidos',
             'icon'        => 'far fa-fw fa-gem'
         ],
         [
-            'text'        => 'Equipos',
-            'url'         => 'equipos',
+            'text'        => 'Clubes',
+            'url'         => 'clubes',
             'icon'        => 'far fa-fw fa-gem'
         ],
         [

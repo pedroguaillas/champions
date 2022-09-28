@@ -10,11 +10,9 @@ class Create extends Component
 {
     public $name, $address, $category_id, $paid;
 
-    protected $rule = [
+    protected $rules = [
         'name' => 'required',
-        'address' => 'required',
-        'category_id' => 'required',
-        'paid' => 'required'
+        'address' => 'required'
     ];
 
     // esto es mas o menos como el constructor del componente
@@ -24,6 +22,7 @@ class Create extends Component
         $this->name = '';
         $this->address = '';
         $this->category_id = Category::first()->id;
+        $this->paid = '';
     }
 
     public function updatingCategoryId($value)
@@ -42,11 +41,13 @@ class Create extends Component
 
     public function store()
     {
+        $this->validate();
+
         $team = Team::create([
             'name' => $this->name,
             'address' => $this->address,
             'category_id' => $this->category_id,
-            'paid' => $this->paid
+            'paid' => $this->paid === '' ? 0 : $this->paid
         ]);
 
         if ($team) {

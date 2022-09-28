@@ -10,4 +10,15 @@ class Team extends Model
     use HasFactory;
 
     protected $fillable = ['name', 'address', 'category_id', 'paid'];
+
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function players()
+    {
+        return $this->hasMany(Player::class);
+    }
 }

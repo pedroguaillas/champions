@@ -16,7 +16,7 @@
                     <tr>
                         <th>Nombre</th>
                         <th>Comunidad</th>
-                        <th>Categoria</th>
+                        <th>Categoría</th>
                         <th>Pagado</th>
                         <th style="width: 4em;"></th>
                     </tr>
@@ -30,7 +30,11 @@
                         <td>{{ $team->paid }}</td>
                         <td>
                             <div class="btn-group btn-group-sm">
-                                <a title="Editar" wire:click="edit({{ $team->id }})" class="btn btn-primary">
+                                <a title="Jugadores" href="{{ route('jugadores', $team->id) }}" class="btn btn-success">
+                                    <i class="far fa-list-alt"></i>
+                                </a>
+
+                                <a title="Editar" wire:click="edit({{ $team->id }})" class="btn btn-primary ml-1">
                                     <i class="far fa-edit"></i>
                                 </a>
 
@@ -45,11 +49,5 @@
             </table>
         </div>
     </div>
-
-    <script>
-        Livewire.on('closeModal', function() {
-            $('#modalwindow').modal('hide')
-        })
-    </script>
 
 </div>
