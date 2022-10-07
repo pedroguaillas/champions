@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\PlayerController;
 use App\Http\Livewire\ListGames;
-use App\Http\Livewire\Team\Index;
+use App\Http\Livewire\ListTeams;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,7 +30,7 @@ Route::middleware([
     })->name('dashboard');
 });
 
-Route::get('clubes', Index::class);
+Route::get('clubes', ListTeams::class);
 Route::get('club/{team_id}/jugadores', [PlayerController::class, 'index'])->name('jugadores');
 Route::get('partidos', ListGames::class);
 
