@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\PlayerController;
+use App\Http\Livewire\Dashboard;
+use App\Http\Livewire\Game;
 use App\Http\Livewire\ListGames;
 use App\Http\Livewire\ListTeams;
 use Illuminate\Support\Facades\Route;
@@ -16,9 +18,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
 
 Route::middleware([
     'auth:sanctum',
@@ -30,9 +30,13 @@ Route::middleware([
     })->name('dashboard');
 });
 
-Route::get('clubes', ListTeams::class);
-Route::get('club/{team_id}/jugadores', [PlayerController::class, 'index'])->name('jugadores');
-Route::get('partidos', ListGames::class);
+Route::middleware(['auth'])->group(function () {
+    Route::get('/', Dashboard::class);
+    Route::get('clubes', ListTeams::class);
+    Route::get('club/{team_id}/jugadores', [PlayerController::class, 'index'])->name('jugadores');
+    Route::get('partidos', ListGames::class);
+    Route::get('partido/{game_id}', Game::class)->name('partido');
+});
 
 Auth::routes();
 

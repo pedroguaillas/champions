@@ -5,89 +5,93 @@
         <div class="card-header">
             <div class="card-title">Clubs</div>
             <div class="card-tools">
-                <div class="dt-buttons btn-group flex-wrap">
-                    <x-adminlte-button wire:click="create" label="+" theme="success" />
+                <div class="dt-buttons btn-group btn-group-sm flex-wrap">
+                    <x-adminlte-button wire:click="create" icon="fas fa-plus" theme="success" class="py-2" />
                 </div>
             </div>
         </div>
         <div class="card-body">
-            <table class="table table-sm">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Comunidad</th>
-                        <th>Categoría</th>
-                        <th>Pagado</th>
-                        <th style="width: 4em;"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($teams as $team)
-                    <tr>
-                        <td>{{ $team->name }}</td>
-                        <td>{{ $team->address }}</td>
-                        <td>{{ $team->category_name }}</td>
-                        <td>{{ $team->paid }}</td>
-                        <td>
-                            <div class="btn-group btn-group-sm">
-                                <a title="Jugadores" href="{{ route('jugadores', $team->id) }}" class="btn btn-success">
-                                    <i class="far fa-list-alt"></i>
-                                </a>
+            <div class="table-responsive">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Comunidad</th>
+                            <th>Categoría</th>
+                            <th>Pagado</th>
+                            <th style="width: 4em;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($teams as $team)
+                        <tr>
+                            <td>{{ $team->name }}</td>
+                            <td>{{ $team->address }}</td>
+                            <td>{{ $team->category_name }}</td>
+                            <td>{{ $team->paid }}</td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <a title="Jugadores" href="{{ route('jugadores', $team->id) }}" class="btn btn-success px-1">
+                                        <i class="fas fa-users"></i>
+                                    </a>
 
-                                <button title="Editar" wire:click="edit({{ $team->id }})" class="btn btn-primary ml-1">
-                                    <i class="far fa-edit"></i>
-                                </button>
+                                    <button title="Editar" wire:click="edit({{ $team->id }})" class="btn btn-primary px-1 ml-1">
+                                        <i class="far fa-edit"></i>
+                                    </button>
 
-                                <button wire:click="$emit( 'deleteDialog', {{ $team->id }} )" title="Eliminar" class="btn btn-danger ml-1">
-                                    <i class="far fa-trash-alt"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                                    <button wire:click="$emit( 'deleteDialog', {{ $team->id }} )" title="Eliminar" class="btn btn-danger px-1 ml-1">
+                                        <i class="far fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
     <!-- Formulario registro y editar club -->
     <x-adminlte-modal id="modal" wire:ignore.self theme="green" icon="fas fa-users-medical" title="{{ isset($this->team->id) ? 'Registro de' : 'Editar' }} club">
 
-        <div class="row">
-            <x-adminlte-input name="name" wire:model.defer="team.name" label="Nombre del club" placeholder="Club sporting" fgroup-class="col-md" disable-feedback />
-        </div>
-        <x-jet-input-error for="team.name" />
+        <div class="modal-body my-0">
+            <div class="row">
+                <x-adminlte-input name="name" wire:model.defer="team.name" label="Nombre del club" placeholder="Club sporting" igroup-size="sm" fgroup-class="col-md" disable-feedback />
+            </div>
+            <x-jet-input-error for="team.name" />
 
-        <div class="row">
-            <x-adminlte-input name="address" wire:model.defer="team.address" label="Comunidad" placeholder="Langa" fgroup-class="col-md" disable-feedback />
-        </div>
-        <x-jet-input-error for="team.address" />
+            <div class="row">
+                <x-adminlte-input name="address" wire:model.defer="team.address" label="Comunidad" placeholder="Langa" igroup-size="sm" fgroup-class="col-md" disable-feedback />
+            </div>
+            <x-jet-input-error for="team.address" />
 
-        <div class="row">
-            <div class="form-group col-md">
-                <label for="category_id">Categoría</label>
-                <div class="input-group">
-                    <select class="form-control" wire:model.defer="team.category_id" required>
-                        @if(!isset($this->team->id))
-                        <option value="">Seleccione</option>
-                        @endif
-                        @foreach($categories as $category)
-                        <option value="{{$category->id}}">{{$category->name}}</option>
-                        @endforeach
-                    </select>
+            <div class="row">
+                <div class="form-group col-md">
+                    <label for="category_id">Categoría</label>
+                    <div class="input-group input-group-sm">
+                        <select class="form-control" wire:model.defer="team.category_id" required>
+                            @if(!isset($this->team->id))
+                            <option value="">Seleccione</option>
+                            @endif
+                            @foreach($categories as $category)
+                            <option value="{{$category->id}}">{{$category->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
             </div>
-        </div>
-        <x-jet-input-error for="team.category_id" />
+            <x-jet-input-error for="team.category_id" />
 
-        <div class="row">
-            <x-adminlte-input name="paid" wire:model.defer="team.paid" label="Pagado" placeholder="35" fgroup-class="col-md" disable-feedback />
-        </div>
-        <x-jet-input-error for="team.paid" />
+            <div class="row">
+                <x-adminlte-input name="paid" wire:model.defer="team.paid" label="Pagado" placeholder="35" igroup-size="sm" fgroup-class="col-md" disable-feedback />
+            </div>
+            <x-jet-input-error for="team.paid" />
 
-        <x-slot name="footerSlot">
-            <x-adminlte-button style="height: 3em;" wire:click="update" theme="success" icon="fas fa-lg fa-save" />
-        </x-slot>
+            <x-slot name="footerSlot">
+                <x-adminlte-button style="height: 3em;" wire:click="update" theme="success" icon="fas fa-lg fa-save" />
+            </x-slot>
+        </div>
     </x-adminlte-modal>
 
     @push("js")
@@ -104,7 +108,7 @@
                 confirmButtonText: 'Si, eliminarlo!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    Livewire.emitTo('ListTeams','delete', team_id)
+                    Livewire.emitTo('ListTeams', 'delete', team_id)
                     Swal.fire(
                         'Eliminado!',
                         'El club ha sido eliminado.',

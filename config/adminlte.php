@@ -253,11 +253,11 @@ return [
     */
 
     'use_route_url' => false,
-    'dashboard_url' => 'home',
+    'dashboard_url' => '/',
     'logout_url' => 'logout',
     'login_url' => 'login',
-    'register_url' => 'register',
-    'password_reset_url' => 'password/reset',
+    'register_url' => '',
+    'password_reset_url' => '',
     'password_email_url' => 'password/email',
     'profile_url' => false,
 
@@ -314,7 +314,7 @@ return [
         [
             'text'        => 'Partidos',
             'url'         => 'partidos',
-            'icon'        => 'far fa-fw fa-gem'
+            'icon'        => 'far fa-fw fa-futbol'
         ],
         [
             'text'        => 'Clubes',
@@ -324,7 +324,7 @@ return [
         [
             'text'        => 'Sanciones',
             'url'         => '#',
-            'icon'        => 'far fa-fw fa-gem'
+            'icon'        => 'far fa-fw fa-bell'
         ],
     ],
 
