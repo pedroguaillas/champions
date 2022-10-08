@@ -11,6 +11,6 @@ class Player extends Model
 
     protected $fillable = [
         'champion_id', 'team_id', 'cedula',
-        'first_name', 'last_name', 'photo'
+        'first_name', 'last_name', 'photo', 'date_of_birth'
     ];
 }

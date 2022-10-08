@@ -54,6 +54,7 @@
                         <input type="text" wire:model.defer="player.cedula" class="form-control form-control-sm" maxlength="10" required>
                     </div>
                 </div>
+                <x-jet-input-error for="player.cedula" />
 
                 <div class="form-group input-group-sm">
                     <label class="control-label mb-0 col-sm-4" for="first_name">Nombre</label>
@@ -61,11 +62,20 @@
                         <input type="text" wire:model.defer="player.first_name" class="form-control form-control-sm" required>
                     </div>
                 </div>
+                <x-jet-input-error for="player.first_name" />
 
                 <div class="form-group input-group-sm">
                     <label class="control-label mb-0 col-sm-4" for="last_name">Apellido</label>
                     <div class="col-sm">
                         <input type="text" wire:model.defer="player.last_name" class="form-control form-control-sm" required>
+                    </div>
+                </div>
+                <x-jet-input-error for="player.last_name" />
+
+                <div class="form-group input-group-sm">
+                    <label class="control-label mb-0 col" for="date_of_birth">Fecha de nacimiento</label>
+                    <div class="col-sm">
+                        <input type="date" wire:model.defer="player.date_of_birth" class="form-control form-control-sm" required>
                     </div>
                 </div>
 

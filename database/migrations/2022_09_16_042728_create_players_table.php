@@ -21,6 +21,7 @@ class CreatePlayersTable extends Migration
             $table->string('first_name', 100);
             $table->string('last_name', 100);
             $table->string('photo', 100)->nullable();
+            $table->date('date_of_birth')->nullable();
             $table->timestamps();
 
             $table->foreign('team_id')->references('id')->on('teams');

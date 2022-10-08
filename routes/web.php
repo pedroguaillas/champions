@@ -4,6 +4,7 @@ use App\Http\Controllers\PlayerController;
 use App\Http\Livewire\Dashboard;
 use App\Http\Livewire\Game;
 use App\Http\Livewire\ListGames;
+use App\Http\Livewire\ListSanctions;
 use App\Http\Livewire\ListTeams;
 use Illuminate\Support\Facades\Route;
 
@@ -36,6 +37,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('club/{team_id}/jugadores', [PlayerController::class, 'index'])->name('jugadores');
     Route::get('partidos', ListGames::class);
     Route::get('partido/{game_id}', Game::class)->name('partido');
+    Route::get('sanciones', ListSanctions::class);
 });
 
 Auth::routes();

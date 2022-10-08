@@ -323,7 +323,7 @@ return [
         ],
         [
             'text'        => 'Sanciones',
-            'url'         => '#',
+            'url'         => 'sanciones',
             'icon'        => 'far fa-fw fa-bell'
         ],
     ],

@@ -13,7 +13,8 @@ class ListPlayers extends Component
     protected $rules = [
         'player.cedula' => 'required',
         'player.first_name' => 'required',
-        'player.last_name' => 'required'
+        'player.last_name' => 'required',
+        'player.date_of_birth' => 'nullable'
     ];
 
     public function mount($team_id)
@@ -50,6 +51,7 @@ class ListPlayers extends Component
                     'cedula' => $this->player->cedula,
                     'first_name' => $this->player->first_name,
                     'last_name' => $this->player->last_name,
+                    'date_of_birth' => $this->player->date_of_birth,
                     'champion_id' => $team->category->champion_id
                 ]);
             }
