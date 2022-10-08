@@ -53,7 +53,7 @@
     </div>
 
     <!-- Formulario registro y editar club -->
-    <x-adminlte-modal id="modal" wire:ignore.self theme="green" icon="fas fa-users-medical" title="{{ isset($this->team->id) ? 'Registro de' : 'Editar' }} club">
+    <x-adminlte-modal id="modal" wire:ignore.self theme="green" icon="fas fa-users-medical" title="{{ isset($this->team->id) ? 'Editar' : 'Registro de' }} club">
 
         <div class="modal-body my-0">
             <div class="row">

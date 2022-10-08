@@ -18,7 +18,9 @@ class ListGames extends Component
         'game.team1_id' => 'required|different:game.team2_id',
         'game.team2_id' => 'required',
         'game.date' => 'required',
-        'game.time' => 'required'
+        'game.time' => 'required',
+        'game.team1_goal' => 'nullable|integer',
+        'game.team2_goal' => 'nullable|integer',
     ];
 
     public function mount()
@@ -71,7 +73,9 @@ class ListGames extends Component
                     'team2_id' => $this->game->team2_id,
                     'progress_id' => Progress::first()->id,
                     'date' => $this->game->date,
-                    'time' => $this->game->time
+                    'time' => $this->game->time,
+                    'team1_goal' => $this->game->team1_goal === null ? 0 : $this->game->team1_goal,
+                    'team2_goal' => $this->game->team2_goal === null ? 0 : $this->game->team2_goal
                 ]);
             }
             $this->emit('closeModal');

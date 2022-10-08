@@ -101,6 +101,14 @@
             <x-adminlte-input name="time" type="time" wire:model.defer="game.time" label="Hora" igroup-size="sm" fgroup-class="col-md" disable-feedback />
         </div>
 
+        <div class="row">
+            <x-adminlte-input name="team1_goal" type="text" wire:model.defer="game.team1_goal" label="Goles club 1" igroup-size="sm" fgroup-class="col-md" disable-feedback />
+        </div>
+
+        <div class="row">
+            <x-adminlte-input name="team2_goal" type="text" wire:model.defer="game.team2_goal" label="Goles club 2" igroup-size="sm" fgroup-class="col-md" disable-feedback />
+        </div>
+
         <x-slot name="footerSlot">
             <x-adminlte-button style="height: 3em;" wire:click="store" theme="success" icon="fas fa-lg fa-save" />
         </x-slot>

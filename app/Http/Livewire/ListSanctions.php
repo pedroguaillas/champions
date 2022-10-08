@@ -74,6 +74,19 @@ class ListSanctions extends Component
         $this->emit('openModal');
     }
 
+    public function edit(Sanction $sanction)
+    {
+        $this->sanction = $sanction;
+        $this->players = Player::where('id', $this->sanction->player_id)->get();
+        $this->teams = Team::where('id', $this->players[0]->team_id)->get();
+        $this->games = Game::where('id', $this->sanction->game_id)->get();
+
+        $this->category_id = $this->teams[0]->category_id;
+        $this->team_id = $this->teams[0]->id;
+
+        $this->emit('openModal');
+    }
+
     public function update()
     {
         if ($this->validate()) {

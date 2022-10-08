@@ -1,6 +1,6 @@
 <div>
     {{-- The Master doesn't talk, he acts. --}}
-    <div class="cad">
+    <div class="card">
         <div class="card-header">
             <div class="card-title">Sanciones</div>
             <div class="card-tools">
@@ -24,9 +24,13 @@
                         @foreach($sanctions as $sanction)
                         <tr>
                             <td>{{ $sanction->first_name .' '. $sanction->last_name }}</td>
-                            <td>{{ $sanction->t1name . ' ' . $sanction->t2name }}</td>
+                            <td>{{ $sanction->t1name . ' VS ' . $sanction->t2name }}</td>
                             <td>{{ $sanction->category_name }}</td>
                             <td>
+                                <div class="btn-group btn-group-sm">
+                                    <x-adminlte-button wire:click="edit({{ $sanction->id }})" theme="primary" icon="far fa-edit" class="px-1" />
+                                    <x-adminlte-button theme="danger" icon="far fa-trash-alt" class="ml-1 px-1" />
+                                </div>
                             </td>
                         </tr>
                         @endforeach
@@ -37,14 +41,16 @@
     </div>
 
     <!-- Formulario registro y editar sanciones -->
-    <x-adminlte-modal id="modal" wire:ignore.self theme="green" icon="fas fa-users-medical" title="{{ isset($this->game->id) ? 'Editar' : 'Registro de' }} sanción">
+    <x-adminlte-modal id="modal" wire:ignore.self theme="green" icon="fas fa-users-medical" title="{{ isset($this->sanction->id) ? 'Editar' : 'Registro de' }} sanción">
 
         <div class="row">
             <div class="form-group col-md">
                 <label for="category_id">Categoría</label>
                 <div class="input-group input-group-sm">
                     <select class="form-control" wire:model="category_id" required>
+                        @if(!isset($this->sanction->id))
                         <option value="">Seleccione</option>
+                        @endif
                         @foreach($categories as $category)
                         <option value="{{$category->id}}">{{$category->name}}</option>
                         @endforeach
@@ -58,7 +64,9 @@
                 <label for="game.team1_id">Partidos</label>
                 <div class="input-group input-group-sm">
                     <select class="form-control" wire:model="sanction.game_id" required>
+                        @if(!isset($this->sanction->id))
                         <option value="">Seleccione</option>
+                        @endif
                         @foreach($games as $game)
                         <option value="{{ $game->id }}">
                             {{ $game->t1name . ' VS ' . $game->t2name }}
@@ -75,7 +83,9 @@
                 <label for="game.team1_id">Equipos</label>
                 <div class="input-group input-group-sm">
                     <select class="form-control" wire:model="team_id" required>
+                        @if(!isset($this->sanction->id))
                         <option value="">Seleccione</option>
+                        @endif
                         @foreach($teams as $team)
                         <option value="{{ $team->id }}">
                             {{ $team->name }}
@@ -91,7 +101,9 @@
                 <label for="game.team1_id">Jugadores</label>
                 <div class="input-group input-group-sm">
                     <select class="form-control" wire:model.defer="sanction.player_id" required>
+                        @if(!isset($this->sanction->id))
                         <option value="">Seleccione</option>
+                        @endif
                         @foreach($players as $player)
                         <option value="{{ $player->id }}">
                             {{ $player->first_name . ' ' . $player->last_name }}
@@ -108,7 +120,9 @@
                 <label for="game.team1_id">Tipo</label>
                 <div class="input-group input-group-sm">
                     <select class="form-control" wire:model.defer="sanction.type" required>
+                        @if(!isset($this->sanction->id))
                         <option value="">Seleccione</option>
+                        @endif
                         <option value="roja">Roja</option>
                         <option value="amarilla">Amarilla</option>
                     </select>
