@@ -34,14 +34,8 @@
                                     <a title="Jugadores" href="{{ route('jugadores', $team->id) }}" class="btn btn-success px-1">
                                         <i class="fas fa-users"></i>
                                     </a>
-
-                                    <button title="Editar" wire:click="edit({{ $team->id }})" class="btn btn-primary px-1 ml-1">
-                                        <i class="far fa-edit"></i>
-                                    </button>
-
-                                    <button wire:click="$emit( 'deleteDialog', {{ $team->id }} )" title="Eliminar" class="btn btn-danger px-1 ml-1">
-                                        <i class="far fa-trash-alt"></i>
-                                    </button>
+                                    <x-adminlte-button wire:click="edit({{ $team->id }})" theme="primary" icon="far fa-edit" class="ml-1 px-1" />
+                                    <x-adminlte-button wire:click="$emit('deleteDialog', {{ $team->id }})" theme="danger" icon="far fa-trash-alt" class="ml-1 px-1" />
                                 </div>
                             </td>
                         </tr>
@@ -55,47 +49,37 @@
     <!-- Formulario registro y editar club -->
     <x-adminlte-modal id="modal" wire:ignore.self theme="green" icon="fas fa-users-medical" title="{{ isset($this->team->id) ? 'Editar' : 'Registro de' }} club">
 
-        <div class="modal-body my-0">
-            <div class="row">
-                <x-adminlte-input name="name" wire:model.defer="team.name" label="Nombre del club" placeholder="Club sporting" igroup-size="sm" fgroup-class="col-md" disable-feedback />
-            </div>
-            <x-jet-input-error for="team.name" />
+        <x-adminlte-input name="name" wire:model.defer="team.name" label="Nombre del club" placeholder="Club sporting" igroup-size="sm" fgroup-class="col-md" disable-feedback />
+        <x-jet-input-error for="team.name" />
 
-            <div class="row">
-                <x-adminlte-input name="address" wire:model.defer="team.address" label="Comunidad" placeholder="Langa" igroup-size="sm" fgroup-class="col-md" disable-feedback />
-            </div>
-            <x-jet-input-error for="team.address" />
+        <x-adminlte-input name="address" wire:model.defer="team.address" label="Comunidad" placeholder="Langa" igroup-size="sm" fgroup-class="col-md" disable-feedback />
+        <x-jet-input-error for="team.address" />
 
-            <div class="row">
-                <div class="form-group col-md">
-                    <label for="category_id">Categoría</label>
-                    <div class="input-group input-group-sm">
-                        <select class="form-control" wire:model.defer="team.category_id" required>
-                            @if(!isset($this->team->id))
-                            <option value="">Seleccione</option>
-                            @endif
-                            @foreach($categories as $category)
-                            <option value="{{$category->id}}">{{$category->name}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
+        <div class="form-group col-md">
+            <label for="category_id">Categoría</label>
+            <div class="input-group input-group-sm">
+                <select class="form-control" wire:model.defer="team.category_id" required>
+                    @if(!isset($this->team->id))
+                    <option value="">Seleccione</option>
+                    @endif
+                    @foreach($categories as $category)
+                    <option value="{{$category->id}}">{{$category->name}}</option>
+                    @endforeach
+                </select>
             </div>
-            <x-jet-input-error for="team.category_id" />
-
-            <div class="row">
-                <x-adminlte-input name="paid" wire:model.defer="team.paid" label="Pagado" placeholder="35" igroup-size="sm" fgroup-class="col-md" disable-feedback />
-            </div>
-            <x-jet-input-error for="team.paid" />
-
-            <x-slot name="footerSlot">
-                <x-adminlte-button style="height: 3em;" wire:click="update" theme="success" icon="fas fa-lg fa-save" />
-            </x-slot>
         </div>
+        <x-jet-input-error for="team.category_id" />
+
+        <x-adminlte-input name="paid" wire:model.defer="team.paid" label="Pagado" placeholder="35" igroup-size="sm" fgroup-class="col-md" disable-feedback />
+        <x-jet-input-error for="team.paid" />
+
+        <x-slot name="footerSlot">
+            <x-adminlte-button style="height: 3em;" wire:click="update" wire:loading.attr="disabled" theme="success" icon="fas fa-lg fa-save" />
+        </x-slot>
+
     </x-adminlte-modal>
 
     @push("js")
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         Livewire.on('deleteDialog', team_id => {
             Swal.fire({
@@ -108,7 +92,7 @@
                 confirmButtonText: 'Si, eliminarlo!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    Livewire.emitTo('ListTeams', 'delete', team_id)
+                    Livewire.emitTo('list-teams', 'delete', team_id)
                     Swal.fire(
                         'Eliminado!',
                         'El club ha sido eliminado.',

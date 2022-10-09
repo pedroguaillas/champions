@@ -22,10 +22,14 @@ class ListPlayers extends Component
         $this->team_id = $team_id;
     }
 
+    protected $listeners = ['delete'];
+
     public function render()
     {
         $players = Player::where('team_id', $this->team_id)->get();
-        return view('livewire.list-players', compact('players'));
+        return view('livewire.list-players', compact('players'))
+            ->layout('layouts.adminlte')
+            ->layoutData(['title' => 'Partidos']);
     }
 
     public function create()
@@ -57,5 +61,10 @@ class ListPlayers extends Component
             }
             $this->emit('closeModal');
         }
+    }
+
+    public function delete(Player $player)
+    {
+        $player->delete();
     }
 }

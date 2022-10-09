@@ -23,6 +23,8 @@ class ListTeams extends Component
         $this->categories = Category::all();
     }
 
+    protected $listeners = ['delete'];
+
     public function render()
     {
         $teams = Team::select('teams.*', 'c.name AS category_name')
@@ -68,7 +70,6 @@ class ListTeams extends Component
 
     public function delete(Team $team)
     {
-        var_dump($team);
         $team->delete();
     }
 }

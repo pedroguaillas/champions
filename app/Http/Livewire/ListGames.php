@@ -33,6 +33,8 @@ class ListGames extends Component
         $this->game->time = $carbon->toTimeString();
     }
 
+    protected $listeners = ['delete'];
+
     public function updatingCategoryId($value)
     {
         $this->teams = Team::where('category_id', $value)->get();
@@ -62,7 +64,7 @@ class ListGames extends Component
         $this->emit('openModal');
     }
 
-    public function store()
+    public function update()
     {
         if ($this->validate()) {
             if (isset($this->game->id)) {
@@ -91,9 +93,8 @@ class ListGames extends Component
         $this->emit('openModal');
     }
 
-    public function destroyed(Game $game)
+    public function delete(Game $game)
     {
-        $this->game = $game;
-        $this->game->delete();
+        $game->delete();
     }
 }

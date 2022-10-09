@@ -25,6 +25,8 @@ class ListSanctions extends Component
         $this->categories = Category::all();
     }
 
+    protected $listeners = ['delete'];
+
     public function updatingCategoryId($value)
     {
         $this->games = Game::select('games.id', 't1.name AS t1name', 't2.name AS t2name')
@@ -53,7 +55,7 @@ class ListSanctions extends Component
 
     public function render()
     {
-        $sanctions = Sanction::select('sanctions.id', 't1.name AS t1name', 't2.name AS t2name', 'p.first_name', 'p.last_name', 'c.name AS category_name')
+        $sanctions = Sanction::select('sanctions.id', 't1.name AS t1name', 't2.name AS t2name', 'p.first_name', 'p.last_name', 'c.name AS category_name', 'type')
             ->join('players AS p', 'p.id', 'player_id')
             ->join('games AS g', 'g.id', 'game_id')
             ->join('teams AS t1', 't1.id', 'team1_id')
@@ -70,6 +72,7 @@ class ListSanctions extends Component
     public function create()
     {
         $this->sanction = new Sanction();
+        $this->category_id = '';
 
         $this->emit('openModal');
     }
@@ -101,5 +104,10 @@ class ListSanctions extends Component
             }
             $this->emit('closeModal');
         }
+    }
+
+    public function delete(Sanction $sanction)
+    {
+        $sanction->delete();
     }
 }
