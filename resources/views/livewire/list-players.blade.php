@@ -3,7 +3,7 @@
 
     <div class="card">
         <div class="card-header">
-            <div class="card-title">Jugadores</div>
+            <div class="card-title">Deportistas de {{ $team->name }}</div>
             <div class="card-tools">
                 <div class="dt-buttons btn-group btn-group-sm flex-wrap">
                     <x-adminlte-button wire:click="create" icon="fas fa-plus" theme="success" class="py-2" />
@@ -29,13 +29,8 @@
                             <td>{{ $player->last_name }}</td>
                             <td>
                                 <div class="btn-group btn-group-sm">
-                                    <button title="Editar" wire:click="edit({{ $player->id }})" class="btn btn-primary">
-                                        <i class="far fa-edit"></i>
-                                    </button>
-
-                                    <button title="Eliminar" class="btn btn-danger ml-1" wire:click="$emit('deleteDialog', {{ $player->id }})">
-                                        <i class="far fa-trash-alt"></i>
-                                    </button>
+                                    <x-adminlte-button wire:click="edit({{ $player->id }})" theme="primary" icon="far fa-edit" class="px-1" />
+                                    <x-adminlte-button wire:click="$emit('deleteDialog', {{ $player->id }})" theme="danger" icon="far fa-trash-alt" class="ml-1 px-1" />
                                 </div>
                             </td>
                         </tr>
@@ -46,7 +41,7 @@
         </div>
     </div>
 
-    <x-adminlte-modal id="modal" wire:ignore.self role="dialog" theme="green" icon="fas fa-users-medical" title="Registro de jugador">
+    <x-adminlte-modal id="modal" wire:ignore.self role="dialog" theme="green" icon="fas fa-users-medical" title="{{ isset($this->player->id) ? 'Editar' : 'Registro de' }} jugador">
 
         <x-adminlte-input id="micedula" name="player.cedula" wire:model.defer="player.cedula" label="Cédula" placeholder="1105121254" igroup-size="sm" fgroup-class="col-md" disable-feedback />
         <x-jet-input-error for="player.cedula" />

@@ -29,10 +29,10 @@
                             <td>{{ $game->t2name }}</td>
                             <td>
                                 <div class="btn-group btn-group-sm">
-                                    <a title="Jugar" href="{{ route('partido', $game->id) }}" class="btn btn-success px-1">
+                                    <!-- <a title="Jugar" href="{{ route('partido', $game->id) }}" class="btn btn-success px-1">
                                         <i class="far fa-futbol"></i>
-                                    </a>
-                                    <x-adminlte-button wire:click="edit({{ $game->id }})" theme="primary" icon="far fa-edit" class="ml-1 px-1" />
+                                    </a> -->
+                                    <x-adminlte-button wire:click="edit({{ $game->id }})" theme="primary" icon="far fa-edit" class="px-1" />
                                     <x-adminlte-button wire:click="$emit('deleteDialog', {{ $game->id }})" theme="danger" icon="far fa-trash-alt" class="ml-1 px-1" />
                                 </div>
                             </td>
@@ -96,6 +96,12 @@
         <x-adminlte-input name="team1_goal" type="text" wire:model.defer="game.team1_goal" label="Goles club 1" igroup-size="sm" fgroup-class="col-md" disable-feedback />
 
         <x-adminlte-input name="team2_goal" type="text" wire:model.defer="game.team2_goal" label="Goles club 2" igroup-size="sm" fgroup-class="col-md" disable-feedback />
+
+        <div class="form-group col-md">
+            <label for="game.played">
+                <input wire:model.defer="game.played" type="checkbox">Jugado
+            </label>
+        </div>
 
         <x-slot name="footerSlot">
             <x-adminlte-button style="height: 3em;" wire:click="update" wire:loading.attr="disabled" theme="success" icon="fas fa-lg fa-save" />

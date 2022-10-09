@@ -8,25 +8,27 @@ use Livewire\Component;
 
 class ListPlayers extends Component
 {
-    public $team_id, $player;
+    public $team, $player;
 
     protected $rules = [
-        'player.cedula' => 'nullable|unique:players,cedula',
+        'player.cedula' => 'nullable',
         'player.first_name' => 'required',
         'player.last_name' => 'required',
         'player.date_of_birth' => 'nullable'
     ];
 
+
     public function mount($team_id)
     {
-        $this->team_id = $team_id;
+        $this->team = Team::find($team_id);
     }
 
     protected $listeners = ['delete'];
 
     public function render()
     {
-        $players = Player::where('team_id', $this->team_id)->get();
+        $players = Player::where('team_id', $this->team->id)->get();
+
         return view('livewire.list-players', compact('players'))
             ->layout('layouts.adminlte')
             ->layoutData(['title' => 'Partidos']);
@@ -50,13 +52,12 @@ class ListPlayers extends Component
             if (isset($this->player->id)) {
                 $this->player->save();
             } else {
-                $team = Team::find($this->team_id);
-                $team->players()->create([
+                $this->team->players()->create([
                     'cedula' => $this->player->cedula,
                     'first_name' => $this->player->first_name,
                     'last_name' => $this->player->last_name,
                     'date_of_birth' => $this->player->date_of_birth,
-                    'champion_id' => $team->category->champion_id
+                    'champion_id' => $this->team->category->champion_id
                 ]);
             }
             $this->emit('closeModal');

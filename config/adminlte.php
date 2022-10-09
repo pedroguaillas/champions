@@ -326,6 +326,11 @@ return [
             'url'         => 'sanciones',
             'icon'        => 'far fa-fw fa-bell'
         ],
+        [
+            'text'        => 'Diario',
+            'url'         => 'diario',
+            'icon'        => 'far fa-fw fa-clock'
+        ],
     ],
 
     /*

@@ -21,6 +21,7 @@ class ListGames extends Component
         'game.time' => 'required',
         'game.team1_goal' => 'nullable|integer',
         'game.team2_goal' => 'nullable|integer',
+        'game.played' => 'nullable'
     ];
 
     public function mount()
@@ -77,7 +78,8 @@ class ListGames extends Component
                     'date' => $this->game->date,
                     'time' => $this->game->time,
                     'team1_goal' => $this->game->team1_goal === null ? 0 : $this->game->team1_goal,
-                    'team2_goal' => $this->game->team2_goal === null ? 0 : $this->game->team2_goal
+                    'team2_goal' => $this->game->team2_goal === null ? 0 : $this->game->team2_goal,
+                    'played' => $this->game->played
                 ]);
             }
             $this->emit('closeModal');

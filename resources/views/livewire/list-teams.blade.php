@@ -3,22 +3,16 @@
 
     <div class="card">
         <div class="card-header">
-            <div class="row">
-                <div class="card-title col-lg-4">Clubs</div>
-                <div class="col-lg-6">
-                    <div class="input-group input-group-sm">
-                        <select class="form-control" wire:model="category_id_filter" required>
-                            <option value="">Filtre por categoría</option>
-                            @foreach($categories as $category)
-                            <option value="{{$category->id}}">{{$category->name}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                <div class="card-tools col-lg-2">
-                    <div class="dt-buttons btn-group btn-group-sm flex-wrap">
-                        <x-adminlte-button wire:click="create" icon="fas fa-plus" theme="success" class="py-2" />
-                    </div>
+            <div class="card-title">Clubs</div>
+            <div class="card-tools">
+                <div class="input-group input-group-sm">
+                    <select class="form-control" wire:model="category_id_filter" required>
+                        <option value="">Filtre por categoría</option>
+                        @foreach($categories as $category)
+                        <option value="{{$category->id}}">{{$category->name}}</option>
+                        @endforeach
+                    </select>
+                    <x-adminlte-button wire:click="create" icon="fas fa-plus" theme="success" class="ml-2 btn-sm" />
                 </div>
             </div>
         </div>
@@ -40,10 +34,17 @@
                             <td>{{ $team->name }}</td>
                             <td>{{ $team->address }}</td>
                             <td>{{ $team->category_name }}</td>
-                            <td>{{ $team->paid }}</td>
+                            <td>
+                                <span class="badge bg-{{ $team->paid ? ( $team->paid < $team->inscription ? 'warning' : 'success' ) : 'danger' }}">
+                                    {{ $team->paid ? $team->paid : 0 }}
+                                </span>
+                            </td>
                             <td>
                                 <div class="btn-group btn-group-sm">
-                                    <a title="Jugadores" href="{{ route('jugadores', $team->id) }}" class="btn btn-success px-1">
+                                    <a title="Pagos" href="{{ route('pagos', $team->id) }}" class="btn btn-success px-1">
+                                        <i class="fas fa-money-bill-wave"></i>
+                                    </a>
+                                    <a title="Jugadores" href="{{ route('jugadores', $team->id) }}" class="btn btn-dark ml-1 px-1">
                                         <i class="fas fa-users"></i>
                                     </a>
                                     <x-adminlte-button wire:click="edit({{ $team->id }})" theme="primary" icon="far fa-edit" class="ml-1 px-1" />
@@ -95,8 +96,10 @@
         </div>
         <x-jet-input-error for="team.group_id" />
 
+        @if(!isset($this->team->id))
         <x-adminlte-input name="paid" wire:model.defer="team.paid" label="Pagado" placeholder="35" igroup-size="sm" fgroup-class="col-md" disable-feedback />
         <x-jet-input-error for="team.paid" />
+        @endif
 
         <x-slot name="footerSlot">
             <x-adminlte-button style="height: 3em;" wire:click="update" wire:loading.attr="disabled" theme="success" icon="fas fa-lg fa-save" />

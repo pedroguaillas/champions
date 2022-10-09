@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\Game;
+use App\Models\Payment;
 use App\Models\Player;
 use App\Models\Sanction;
 use App\Models\Team;
@@ -12,7 +13,7 @@ class Dashboard extends Component
 {
     public function render()
     {
-        $sum_inscriptions = Team::sum('paid');
+        $sum_inscriptions = Payment::sum('amount');
         $teams = Team::all()->count();
         $games = Game::all()->count();
         $players = Player::all()->count();

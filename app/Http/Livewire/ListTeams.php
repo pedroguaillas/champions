@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\Category;
 use App\Models\Group;
 use App\Models\Team;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class ListTeams extends Component
@@ -46,10 +47,13 @@ class ListTeams extends Component
 
     public function render()
     {
-        $teams = Team::select('teams.*', 'c.name AS category_name')
-            ->join('categories AS c', 'category_id', 'c.id')
+        $teams = DB::table('teams AS t')
+            ->select(DB::raw('t.id,t.name,t.address,c.name AS category_name,c.inscription, SUM(p.amount) AS paid'))
+            ->join('categories AS c', 'c.id', 'category_id')
+            ->leftJoin('payments AS p', 'p.team_id', 't.id')
             ->whereIn('c.id', $this->filters_categories)
-            ->orderBy('teams.created_at', 'DESC')
+            ->groupBy(['id', 'name', 'address', 'category_name', 'inscription'])
+            ->orderBy('t.created_at', 'DESC')
             ->get();
 
         return view(
@@ -79,13 +83,18 @@ class ListTeams extends Component
             if (isset($this->team->id)) {
                 $this->team->save();
             } else {
-                Team::create([
+                $team = Team::create([
                     'name' => $this->team->name,
                     'address' => $this->team->address,
                     'category_id' => $this->team->category_id,
                     'group_id' => $this->team->group_id,
-                    'paid' => $this->team->paid === '' || $this->team->paid === null ? 0 : $this->team->paid
+                    'paid' => 0
                 ]);
+                if ($this->team->paid !== null && $this->team->paid !== '') {
+                    $team->payments()->create([
+                        'amount' => $this->team->paid
+                    ]);
+                }
             }
             $this->emit('closeModal');
         }

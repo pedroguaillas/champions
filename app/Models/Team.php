@@ -21,4 +21,9 @@ class Team extends Model
     {
         return $this->hasMany(Player::class);
     }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
 }
