@@ -11,7 +11,7 @@ class ListPlayers extends Component
     public $team_id, $player;
 
     protected $rules = [
-        'player.cedula' => 'required',
+        'player.cedula' => 'nullable|unique:players,cedula',
         'player.first_name' => 'required',
         'player.last_name' => 'required',
         'player.date_of_birth' => 'nullable'

@@ -106,7 +106,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
     <script>
         $('#mifecha').mask('0000-00-00')
-        $('#mihora').mask('00:00:00')
+        $('#mihora').mask('00:00')
 
         Livewire.on('deleteDialog', game_id => {
             Swal.fire({

@@ -3,10 +3,22 @@
 
     <div class="card">
         <div class="card-header">
-            <div class="card-title">Clubs</div>
-            <div class="card-tools">
-                <div class="dt-buttons btn-group btn-group-sm flex-wrap">
-                    <x-adminlte-button wire:click="create" icon="fas fa-plus" theme="success" class="py-2" />
+            <div class="row">
+                <div class="card-title col-lg-4">Clubs</div>
+                <div class="col-lg-6">
+                    <div class="input-group input-group-sm">
+                        <select class="form-control" wire:model="category_id_filter" required>
+                            <option value="">Filtre por categoría</option>
+                            @foreach($categories as $category)
+                            <option value="{{$category->id}}">{{$category->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="card-tools col-lg-2">
+                    <div class="dt-buttons btn-group btn-group-sm flex-wrap">
+                        <x-adminlte-button wire:click="create" icon="fas fa-plus" theme="success" class="py-2" />
+                    </div>
                 </div>
             </div>
         </div>
@@ -58,7 +70,7 @@
         <div class="form-group col-md">
             <label for="category_id">Categoría</label>
             <div class="input-group input-group-sm">
-                <select class="form-control" wire:model.defer="team.category_id" required>
+                <select class="form-control" wire:model="team.category_id" required>
                     @if(!isset($this->team->id))
                     <option value="">Seleccione</option>
                     @endif
@@ -69,6 +81,19 @@
             </div>
         </div>
         <x-jet-input-error for="team.category_id" />
+
+        <div class="form-group col-md">
+            <label for="category_id">Grupo</label>
+            <div class="input-group input-group-sm">
+                <select class="form-control" wire:model.defer="team.group_id" required>
+                    <option value="">Seleccione</option>
+                    @foreach($groups as $group)
+                    <option value="{{ $group->id }}">{{ $group->description }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+        <x-jet-input-error for="team.group_id" />
 
         <x-adminlte-input name="paid" wire:model.defer="team.paid" label="Pagado" placeholder="35" igroup-size="sm" fgroup-class="col-md" disable-feedback />
         <x-jet-input-error for="team.paid" />
