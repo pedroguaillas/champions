@@ -313,7 +313,7 @@ return [
         ],
         [
             'text'        => 'Partidos',
-            'url'         => 'partidos',
+            'url'         => 'seleccionar_categoria',
             'icon'        => 'far fa-fw fa-futbol'
         ],
         [

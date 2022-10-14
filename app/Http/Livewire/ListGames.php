@@ -24,7 +24,7 @@ class ListGames extends Component
         'game.played' => 'nullable'
     ];
 
-    public function mount()
+    public function mount($category_id)
     {
         $this->categories = Category::all();
         $this->teams = [];

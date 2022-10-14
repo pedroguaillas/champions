@@ -8,6 +8,7 @@ use App\Http\Livewire\ListPayments;
 use App\Http\Livewire\ListPlayers;
 use App\Http\Livewire\ListSanctions;
 use App\Http\Livewire\ListTeams;
+use App\Http\Livewire\SelectCategory;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -38,7 +39,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('clubes', ListTeams::class);
     Route::get('club/{team_id}/jugadores', ListPlayers::class)->name('jugadores');
     Route::get('club/{team_id}/pagos', ListPayments::class)->name('pagos');
-    Route::get('partidos', ListGames::class);
+    Route::get('seleccionar_categoria', SelectCategory::class);
+    Route::get('categoria/{$category_id}/partidos', ListGames::class)->name('partidos');
     Route::get('partido/{game_id}', Game::class)->name('partido');
     Route::get('sanciones', ListSanctions::class);
     Route::get('diario', Diary::class);
