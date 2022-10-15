@@ -3,10 +3,17 @@
 
     <div class="card">
         <div class="card-header">
-            <div class="card-title">Partidos</div>
+            <div class="card-title">{{ $category->name }}</div>
             <div class="card-tools">
-                <div class="dt-buttons btn-group btn-group-sm flex-wrap">
-                    <x-adminlte-button wire:click="create" icon="fas fa-plus" theme="success" class="py-2" />
+                <div class="input-group input-group-sm">
+                    <select class="form-control" wire:model="group_id" required>
+                        <option value="">Filtre por serie</option>
+                        @foreach($groups as $group)
+                        <option value="{{$group->id}}">{{$group->description}}</option>
+                        @endforeach
+                    </select>
+                    <x-adminlte-button label="Generar" wire:click="generarHorario" class="ml-2 btn-sm" />
+                    <x-adminlte-button wire:click="create" icon="fas fa-plus" theme="success" class="ml-2 btn-sm" />
                 </div>
             </div>
         </div>
@@ -15,6 +22,7 @@
                 <table class="table table-sm" style="text-align: center;">
                     <thead>
                         <tr>
+                            <th style="width: 1em;">N°</th>
                             <th>Equipo 1</th>
                             <th>VS</th>
                             <th>Equipo 2</th>
@@ -22,8 +30,12 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @php
+                        $i = 1;
+                        @endphp
                         @foreach($games as $game)
                         <tr>
+                            <td>{{ $i }}</td>
                             <td>{{ $game->t1name }}</td>
                             <td>VS</td>
                             <td>{{ $game->t2name }}</td>
@@ -37,6 +49,9 @@
                                 </div>
                             </td>
                         </tr>
+                        @php
+                        $i ++;
+                        @endphp
                         @endforeach
                     </tbody>
                 </table>
@@ -46,18 +61,6 @@
 
     <!-- Modal -->
     <x-adminlte-modal id="modal" wire:ignore.self theme="green" icon="fas fa-users-medical" title="{{ isset($this->game->id) ? 'Editar' : 'Registro de' }} partido">
-
-        <div class="form-group col-md">
-            <label for="category_id">Categoría</label>
-            <div class="input-group input-group-sm">
-                <select class="form-control" wire:model="category_id" required>
-                    <option value="">Seleccione</option>
-                    @foreach($categories as $category)
-                    <option value="{{$category->id}}">{{$category->name}}</option>
-                    @endforeach
-                </select>
-            </div>
-        </div>
 
         <div class="form-group col-md">
             <label for="game.team1_id">Equipo 1</label>

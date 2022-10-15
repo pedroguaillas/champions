@@ -313,12 +313,12 @@ return [
         ],
         [
             'text'        => 'Partidos',
-            'url'         => 'seleccionar_categoria',
+            'url'         => 'seleccionar_categoria/partidos',
             'icon'        => 'far fa-fw fa-futbol'
         ],
         [
             'text'        => 'Clubes',
-            'url'         => 'clubes',
+            'url'         => 'seleccionar_categoria/clubes',
             'icon'        => 'far fa-fw fa-gem'
         ],
         [

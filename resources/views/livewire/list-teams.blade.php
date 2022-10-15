@@ -3,13 +3,13 @@
 
     <div class="card">
         <div class="card-header">
-            <div class="card-title">Clubs</div>
+            <div class="card-title">{{ $category->name }}</div>
             <div class="card-tools">
                 <div class="input-group input-group-sm">
-                    <select class="form-control" wire:model="category_id_filter" required>
-                        <option value="">Filtre por categoría</option>
-                        @foreach($categories as $category)
-                        <option value="{{$category->id}}">{{$category->name}}</option>
+                    <select class="form-control" wire:model="group_id_filter" required>
+                        <option value="">Filtre por serie</option>
+                        @foreach($groups as $group)
+                        <option value="{{$group->id}}">{{$group->description}}</option>
                         @endforeach
                     </select>
                     <x-adminlte-button wire:click="create" icon="fas fa-plus" theme="success" class="ml-2 btn-sm" />
@@ -21,30 +21,27 @@
                 <table class="table table-sm">
                     <thead>
                         <tr>
+                            <th>N°</th>
                             <th>Nombre</th>
-                            <th>Comunidad</th>
-                            <th>Categoría</th>
-                            <th>Pagado</th>
+                            <th>Serie</th>
                             <th style="width: 4em;"></th>
                         </tr>
                     </thead>
                     <tbody>
+                        @php
+                        $i = 1;
+                        @endphp
                         @foreach($teams as $team)
                         <tr>
+                            <td>{{ $i }}</td>
                             <td>{{ $team->name }}</td>
-                            <td>{{ $team->address }}</td>
-                            <td>{{ $team->category_name }}</td>
+                            <td>{{ $team->description }}</td>
                             <td>
-                                <span class="badge bg-{{ $team->paid ? ( $team->paid < $team->inscription ? 'warning' : 'success' ) : 'danger' }}">
-                                    {{ $team->paid ? $team->paid : 0 }}
-                                </span>
-                            </td>
-                            <td>
-                                <div class="btn-group btn-group-sm">
-                                    <a title="Pagos" href="{{ route('pagos', $team->id) }}" class="btn btn-success px-1">
+                                <div class="btn-group btn-group">
+                                    <!-- <a title="Pagos" href="{{ route('pagos', $team->id) }}" class="btn btn-success px-1">
                                         <i class="fas fa-money-bill-wave"></i>
-                                    </a>
-                                    <a title="Jugadores" href="{{ route('jugadores', $team->id) }}" class="btn btn-dark ml-1 px-1">
+                                    </a> -->
+                                    <a title="Jugadores" href="{{ route('jugadores', $team->id) }}" class="btn btn-success px-1">
                                         <i class="fas fa-users"></i>
                                     </a>
                                     <x-adminlte-button wire:click="edit({{ $team->id }})" theme="primary" icon="far fa-edit" class="ml-1 px-1" />
@@ -52,6 +49,9 @@
                                 </div>
                             </td>
                         </tr>
+                        @php
+                        $i ++;
+                        @endphp
                         @endforeach
                     </tbody>
                 </table>
@@ -67,21 +67,6 @@
 
         <x-adminlte-input name="address" wire:model.defer="team.address" label="Comunidad" placeholder="Langa" igroup-size="sm" fgroup-class="col-md" disable-feedback />
         <x-jet-input-error for="team.address" />
-
-        <div class="form-group col-md">
-            <label for="category_id">Categoría</label>
-            <div class="input-group input-group-sm">
-                <select class="form-control" wire:model="team.category_id" required>
-                    @if(!isset($this->team->id))
-                    <option value="">Seleccione</option>
-                    @endif
-                    @foreach($categories as $category)
-                    <option value="{{$category->id}}">{{$category->name}}</option>
-                    @endforeach
-                </select>
-            </div>
-        </div>
-        <x-jet-input-error for="team.category_id" />
 
         <div class="form-group col-md">
             <label for="category_id">Grupo</label>

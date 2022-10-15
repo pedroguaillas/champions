@@ -10,4 +10,9 @@ class Progress extends Model
     use HasFactory;
 
     protected $fillable = ['champion_id', 'description', 'active', 'date'];
+
+    public function games()
+    {
+        return $this->hasMany(Game::class);
+    }
 }

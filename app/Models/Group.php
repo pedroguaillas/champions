@@ -12,4 +12,9 @@ class Group extends Model
     protected $fillable = [
         'category_id', 'description'
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 }

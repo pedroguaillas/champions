@@ -11,7 +11,6 @@ class Team extends Model
 
     protected $fillable = ['name', 'address', 'category_id', 'group_id', 'paid'];
 
-
     public function category()
     {
         return $this->belongsTo(Category::class);

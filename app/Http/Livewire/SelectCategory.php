@@ -2,14 +2,25 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Category;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class SelectCategory extends Component
 {
+    public $type;
+
+    public function mount($type)
+    {
+        $this->type = $type;
+    }
+
     public function render()
     {
-        $categories = Category::all();
+        $categories = DB::table('categories AS c')
+            ->select(DB::raw('c.id,c.name,COUNT(t.id) AS count'))
+            ->join('teams AS t', 'c.id', 'category_id')
+            ->groupBy('id', 'name')
+            ->get();
 
         return view('livewire.select-category', compact('categories'))
             ->layout('layouts.adminlte')

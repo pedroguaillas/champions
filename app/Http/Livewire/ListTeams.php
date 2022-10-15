@@ -11,36 +11,39 @@ use Livewire\Component;
 class ListTeams extends Component
 {
     public $team;
-    public $categories = [];
-    public $groups = [];
+    public $category;
+    public $groups;
 
-    public $category_id_filter;
-    public $filters_categories = [];
+    public $group_id_filter;
+    public $filters_groups;
 
     protected $rules = [
         'team.name' => 'required',
         'team.address' => 'required',
-        'team.category_id' => 'required|numeric',
         'team.group_id' => 'required|numeric',
         'team.paid' => 'nullable|numeric'
     ];
 
-    public function mount()
+    public function mount($category_id)
     {
-        $this->categories = Category::all();
-        $this->filters_categories = $this->categories->map(function ($category) {
-            return $category->id;
+        $this->category = Category::find($category_id);
+        $this->groups = $this->category->groups;
+
+        $this->filters_groups = $this->groups->map(function ($group) {
+            return $group->id;
         });
     }
 
-    public function updatingCategoryIdFilter($value)
+    public function updatingGroupIdFilter($value)
     {
-        $this->filters_categories = [$value];
-    }
-
-    public function updatingTeamCategoryId($value)
-    {
-        $this->groups = Group::where('category_id', $value)->get();
+        if ($value === '') {
+            $this->filters_groups = Group::where('category_id', $this->category->id)
+                ->get()->map(function ($group) {
+                    return $group->id;
+                });
+        } else {
+            $this->filters_groups = [$value];
+        }
     }
 
     protected $listeners = ['delete'];
@@ -48,12 +51,14 @@ class ListTeams extends Component
     public function render()
     {
         $teams = DB::table('teams AS t')
-            ->select(DB::raw('t.id,t.name,t.address,c.name AS category_name,c.inscription, SUM(p.amount) AS paid'))
+            ->select(DB::raw('t.id,t.name,g.description,SUM(p.amount) AS paid'))
             ->join('categories AS c', 'c.id', 'category_id')
+            ->leftJoin('groups AS g', 'g.id', 'group_id')
             ->leftJoin('payments AS p', 'p.team_id', 't.id')
-            ->whereIn('c.id', $this->filters_categories)
-            ->groupBy(['id', 'name', 'address', 'category_name', 'inscription'])
-            ->orderBy('t.created_at', 'DESC')
+            ->where('c.id', $this->category->id)
+            ->whereIn('g.id', $this->filters_groups)
+            ->groupBy(['id', 'name', 'description'])
+            ->orderBy('name')
             ->get();
 
         return view(
@@ -83,10 +88,9 @@ class ListTeams extends Component
             if (isset($this->team->id)) {
                 $this->team->save();
             } else {
-                $team = Team::create([
+                $team = $this->category->teams()->create([
                     'name' => $this->team->name,
                     'address' => $this->team->address,
-                    'category_id' => $this->team->category_id,
                     'group_id' => $this->team->group_id,
                     'paid' => 0
                 ]);

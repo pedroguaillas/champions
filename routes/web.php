@@ -36,11 +36,11 @@ Route::middleware([
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/', Dashboard::class);
-    Route::get('clubes', ListTeams::class);
+    Route::get('categoria/{category_id}/clubes', ListTeams::class)->name('clubes');
     Route::get('club/{team_id}/jugadores', ListPlayers::class)->name('jugadores');
     Route::get('club/{team_id}/pagos', ListPayments::class)->name('pagos');
-    Route::get('seleccionar_categoria', SelectCategory::class);
-    Route::get('categoria/{$category_id}/partidos', ListGames::class)->name('partidos');
+    Route::get('seleccionar_categoria/{type}', SelectCategory::class);
+    Route::get('categoria/{category_id}/partidos', ListGames::class)->name('partidos');
     Route::get('partido/{game_id}', Game::class)->name('partido');
     Route::get('sanciones', ListSanctions::class);
     Route::get('diario', Diary::class);
