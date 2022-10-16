@@ -28,7 +28,7 @@
                             <td>{{ $payment->amount }}</td>
                             <td>{{ $payment->note }}</td>
                             <td>
-                                <div class="btn-group btn-group-sm">
+                                <div class="btn-group">
                                     <x-adminlte-button wire:click="edit({{ $payment->id }})" theme="primary" icon="far fa-edit" class="px-1" />
                                     <x-adminlte-button wire:click="$emit('deleteDialog', {{ $payment->id }})" theme="danger" icon="far fa-trash-alt" class="ml-1 px-1" />
                                 </div>

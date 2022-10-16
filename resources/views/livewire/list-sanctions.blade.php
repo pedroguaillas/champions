@@ -60,9 +60,9 @@
         </div>
 
         <div class="form-group col-md">
-            <label for="game.team1_id">Partidos</label>
+            <label for="sanction.game_id">Partido</label>
             <div class="input-group input-group-sm">
-                <select class="form-control" wire:model="sanction.game_id" required>
+                <select name="sanction.game_id" class="form-control" wire:model="sanction.game_id" required>
                     @if(!isset($this->sanction->id))
                     <option value="">Seleccione</option>
                     @endif
@@ -77,7 +77,7 @@
         <x-jet-input-error for="sanction.game_id" />
 
         <div class="form-group col-md">
-            <label for="game.team1_id">Equipos</label>
+            <label for="team1_id">Equipo</label>
             <div class="input-group input-group-sm">
                 <select class="form-control" wire:model="team_id" required>
                     @if(!isset($this->sanction->id))
@@ -93,7 +93,7 @@
         </div>
 
         <div class="form-group col-md">
-            <label for="game.team1_id">Jugadores</label>
+            <label for="sanction.player_id">Jugador</label>
             <div class="input-group input-group-sm">
                 <select class="form-control" wire:model.defer="sanction.player_id" required>
                     @if(!isset($this->sanction->id))
@@ -110,7 +110,7 @@
         <x-jet-input-error for="sanction.player_id" />
 
         <div class="form-group col-md">
-            <label for="game.team1_id">Tarjeta</label>
+            <label for="sanction.type">Tarjeta</label>
             <div class="input-group input-group-sm">
                 <select class="form-control" wire:model.defer="sanction.type" required>
                     @if(!isset($this->sanction->id))

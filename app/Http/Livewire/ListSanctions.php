@@ -72,7 +72,8 @@ class ListSanctions extends Component
     public function create()
     {
         $this->sanction = new Sanction();
-        $this->category_id = '';
+        $this->category_id = 0;
+        $this->team_id = 0;
 
         $this->emit('openModal');
     }

@@ -4,10 +4,12 @@ namespace App\Http\Livewire;
 
 use App\Models\Category;
 use App\Models\Game;
+use App\Models\Player;
 use App\Models\Progress;
 use App\Models\Team;
 use Carbon\Carbon;
 use Livewire\Component;
+use stdClass;
 
 class ListGames extends Component
 {
@@ -16,6 +18,11 @@ class ListGames extends Component
     public $game;
     public $category;
     public $filter_groups;
+
+    public $game_select;
+    public $join_players;
+    public $team1_players;
+    public $team2_players;
 
     protected $rules = [
         'game.team1_id' => 'required|different:game.team2_id',
@@ -40,6 +47,11 @@ class ListGames extends Component
         $this->filter_groups = $this->groups->map(function ($group) {
             return $group->id;
         });
+
+        $this->game_select = new Game();
+        $this->team1_players = [];
+        $this->team2_players = [];
+        $this->join_players = [];
     }
 
     protected $listeners = ['delete'];
@@ -57,7 +69,7 @@ class ListGames extends Component
 
     public function render()
     {
-        $games = Game::select('games.id', 't1.name AS t1name', 't2.name AS t2name')
+        $games = Game::select('games.id', 't1.name AS t1name', 't2.name AS t2name', 'games.played')
             ->join('teams AS t1', 'games.team1_id', 't1.id')
             ->join('teams AS t2', 'games.team2_id', 't2.id')
             ->where('t1.category_id', $this->category->id)
@@ -71,6 +83,34 @@ class ListGames extends Component
         return view('livewire.list-games', compact('games'))
             ->layout('layouts.adminlte')
             ->layoutData(['title' => 'Partidos']);
+    }
+
+    public function selectPlayers($game_id)
+    {
+        $this->game_select = Game::select('games.*', 't1.name AS t1_name', 't2.name AS t2_name')
+            ->join('teams AS t1', 'team1_id', 't1.id')
+            ->join('teams AS t2', 'team2_id', 't2.id')
+            ->where('games.id', $game_id)
+            ->first();
+
+        $team1_players = Player::where('team_id', $this->game_select->team1_id)->get();
+        $team2_players = Player::where('team_id', $this->game_select->team2_id)->get();
+
+        $this->join_players = [];
+
+        $i = 0;
+
+        while ($i < count($team1_players) || $i < count($team2_players)) {
+            array_push($this->join_players, [
+                'player1_id' => $i < count($team1_players) ? $team1_players[$i]->id : '',
+                'player2_id' => $i < count($team2_players) ? $team2_players[$i]->id : '',
+                'player1_name' => $i < count($team1_players) ? $team1_players[$i]->first_name . ' ' . $team1_players[$i]->last_name : '',
+                'player2_name' => $i < count($team2_players) ? $team2_players[$i]->first_name . ' ' . $team2_players[$i]->last_name : '',
+            ]);
+            $i++;
+        }
+
+        $this->emit('showModalSelectPlay');
     }
 
     public function create()
