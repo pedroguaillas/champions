@@ -18,7 +18,7 @@ class SelectCategory extends Component
     {
         $categories = DB::table('categories AS c')
             ->select(DB::raw('c.id,c.name,COUNT(t.id) AS count'))
-            ->join('teams AS t', 'c.id', 'category_id')
+            ->leftJoin('teams AS t', 'c.id', 'category_id')
             ->groupBy('id', 'name')
             ->get();
 

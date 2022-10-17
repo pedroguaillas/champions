@@ -21,7 +21,7 @@ class ListTeams extends Component
         'team.name' => 'required',
         'team.address' => 'required',
         'team.group_id' => 'required|numeric',
-        'team.paid' => 'nullable|numeric'
+        'team.extra_points' => 'nullable|integer'
     ];
 
     public function mount($category_id)
