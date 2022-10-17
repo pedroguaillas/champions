@@ -12,7 +12,11 @@ class Game extends Model
     protected $fillable = [
         'team1_id', 'team2_id', 'progress_id',
         'captain1_id', 'captain2_id', 'date',
-        'time', 'team1_goal', 'team2_goal',
-        'played'
+        'time', 'state'
     ];
+
+    public function gameitems()
+    {
+        return $this->hasMany(GameItem::class);
+    }
 }

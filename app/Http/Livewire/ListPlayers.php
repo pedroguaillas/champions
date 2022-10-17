@@ -14,6 +14,8 @@ class ListPlayers extends Component
         'player.cedula' => 'nullable',
         'player.first_name' => 'required',
         'player.last_name' => 'required',
+        'player.t_shirt' => 'nullable',
+        'player.phone' => 'nullable',
         'player.date_of_birth' => 'nullable'
     ];
 

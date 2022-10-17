@@ -12,7 +12,6 @@
                         <option value="{{$group->id}}">{{$group->description}}</option>
                         @endforeach
                     </select>
-                    <!-- <x-adminlte-button label="Generar" wire:click="generarHorario" class="ml-2 btn-sm" /> -->
                     <x-adminlte-button wire:click="create" icon="fas fa-plus" theme="success" class="ml-2 btn-sm" />
                 </div>
             </div>
@@ -38,7 +37,7 @@
                             <td>{{ $i }}</td>
                             <td>{{ $game->t1name }}</td>
                             <td>
-                                @if($game->played)
+                                @if($game->state === 'finalizado')
                                 <span class="badge bg-success">VS</span>
                                 @else
                                 VS
@@ -47,11 +46,12 @@
                             <td>{{ $game->t2name }}</td>
                             <td>
                                 <div class="btn-group">
-                                    <!-- <a title="Jugar" href="{{ route('partido', $game->id) }}" class="btn btn-success px-1">
-                                        <i class="far fa-futbol"></i>
-                                    </a> -->
-                                    @if(!$game->played)
+                                    @if($game->state === 'creado')
                                     <x-adminlte-button wire:click="selectPlayers({{ $game->id }})" theme="success" icon="far fa-futbol" class="px-1" />
+                                    @else
+                                    <a title="Jugar" href="{{ route('partido', $game->id) }}" class="btn btn-success px-1">
+                                        <i class="far fa-futbol"></i>
+                                    </a>
                                     @endif
                                     <x-adminlte-button wire:click="edit({{ $game->id }})" theme="primary" icon="far fa-edit" class="ml-1 px-1" />
                                     <x-adminlte-button wire:click="$emit('deleteDialog', {{ $game->id }})" theme="danger" icon="far fa-trash-alt" class="ml-1 px-1" />
@@ -69,15 +69,15 @@
     </div>
 
     <!-- Modal Seleccionar jugadores para jugar -->
-    <x-adminlte-modal id="modalSelectPlayers" wire:ignore.self theme="green" icon="fas fa-users-medical" icon="far fa-futbol" title="Seleccionar jugadores">
+    <x-adminlte-modal id="modalSelectPlayers" wire:ignore.self theme="green" icon="far fa-futbol" title="Seleccionar jugadores">
 
         <div class="table-responsive">
-            <table class="table table-sm text-center">
+            <table class="table table-sm table-bordered">
                 <thead>
                     <tr>
                         <th style="width: .3em;"></th>
-                        <th>{{ $game_select->t1_name !== null ? $game_select->t1_name : '' }}</th>
-                        <th>{{ $game_select->t2_name !== null ? $game_select->t2_name : ''}}</th>
+                        <th>{{ $game_select['t1_name'] !== null ? $game_select['t1_name'] : '' }}</th>
+                        <th class="text-right">{{ $game_select['t2_name'] !== null ? $game_select['t2_name'] : ''}}</th>
                         <th style="width: .3em;"></th>
                     </tr>
                 </thead>
@@ -86,14 +86,14 @@
                     <tr>
                         <td>
                             @if($join_player['player1_name'] !== '')
-                            <input class="form-check-input" type="checkbox" value="{{ $join_player['player1_id'] }}" wire:model="team1_players" />
+                            <input type="checkbox" value="{{ $join_player['player1_id'] }}" wire:model="team1_players" />
                             @endif
                         </td>
                         <td>{{ $join_player['player1_name'] }}</td>
-                        <td>{{ $join_player['player2_name'] }}</td>
+                        <td class="text-right">{{ $join_player['player2_name'] }}</td>
                         <td>
                             @if($join_player['player2_name'] !== '')
-                            <input class="form-check-input" type="checkbox" value="{{ $join_player['player2_id'] }}" wire:model="team2_players" />
+                            <input type="checkbox" value="{{ $join_player['player2_id'] }}" wire:model="team2_players" />
                             @endif
                         </td>
                     </tr>
@@ -102,8 +102,12 @@
             </table>
         </div>
 
+        @if($this->error_play !== '')
+        <span class="text-sm text-red-600 text-danger ml-2">{{ $this->error_play }}</span>
+        @endif
+
         <x-slot name="footerSlot">
-            <x-adminlte-button wire:click="update" wire:loading.attr="disabled" theme="success" label="Jugar" />
+            <x-adminlte-button wire:click="play" wire:loading.attr="disabled" theme="success" label="Jugar" />
         </x-slot>
     </x-adminlte-modal>
 
@@ -132,8 +136,8 @@
             <div class="input-group input-group-sm">
                 <select class="form-control" wire:model.defer="game.team2_id" required>
                     <option value="">Seleccione</option>
-                    @foreach($teams as $eam)
-                    <option value="{{$eam->id}}">{{$eam->name}}</option>
+                    @foreach($teams as $team)
+                    <option value="{{$team->id}}">{{$team->name}}</option>
                     @endforeach
                 </select>
             </div>
@@ -144,15 +148,18 @@
 
         <x-adminlte-input name="time" id="mihora" wire:model.defer="game.time" label="Hora" igroup-size="sm" fgroup-class="col-md" disable-feedback />
 
-        <x-adminlte-input name="team1_goal" type="text" wire:model.defer="game.team1_goal" label="Goles club 1" igroup-size="sm" fgroup-class="col-md" disable-feedback />
-
-        <x-adminlte-input name="team2_goal" type="text" wire:model.defer="game.team2_goal" label="Goles club 2" igroup-size="sm" fgroup-class="col-md" disable-feedback />
-
+        @if(isset($this->game->id))
         <div class="form-group col-md">
-            <label for="game.played">
-                <input wire:model.defer="game.played" type="checkbox">Jugado
-            </label>
+            <label for="game.team2_id">Estado</label>
+            <div class="input-group input-group-sm">
+                <select class="form-control" wire:model.defer="game.state" required>
+                    <option value="creado">Creado</option>
+                    <option value="jugando">Jugando</option>
+                    <option value="finalizado">Finalizado</option>
+                </select>
+            </div>
         </div>
+        @endif
 
         <x-slot name="footerSlot">
             <x-adminlte-button style="height: 3em;" wire:click="update" wire:loading.attr="disabled" theme="success" icon="fas fa-lg fa-save" />

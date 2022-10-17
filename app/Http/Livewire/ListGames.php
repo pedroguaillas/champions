@@ -8,8 +8,8 @@ use App\Models\Player;
 use App\Models\Progress;
 use App\Models\Team;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
-use stdClass;
 
 class ListGames extends Component
 {
@@ -23,15 +23,14 @@ class ListGames extends Component
     public $join_players;
     public $team1_players;
     public $team2_players;
+    public $error_play;
 
     protected $rules = [
         'game.team1_id' => 'required|different:game.team2_id',
         'game.team2_id' => 'required',
         'game.date' => 'required',
         'game.time' => 'required',
-        'game.team1_goal' => 'nullable|integer',
-        'game.team2_goal' => 'nullable|integer',
-        'game.played' => 'nullable'
+        'game.state' => 'nullable'
     ];
 
     public function mount($category_id)
@@ -49,9 +48,10 @@ class ListGames extends Component
         });
 
         $this->game_select = new Game();
+        $this->join_players = [];
         $this->team1_players = [];
         $this->team2_players = [];
-        $this->join_players = [];
+        $this->error_play = '';
     }
 
     protected $listeners = ['delete'];
@@ -69,7 +69,7 @@ class ListGames extends Component
 
     public function render()
     {
-        $games = Game::select('games.id', 't1.name AS t1name', 't2.name AS t2name', 'games.played')
+        $games = Game::select('games.id', 't1.name AS t1name', 't2.name AS t2name', 'games.state')
             ->join('teams AS t1', 'games.team1_id', 't1.id')
             ->join('teams AS t2', 'games.team2_id', 't2.id')
             ->where('t1.category_id', $this->category->id)
@@ -87,14 +87,15 @@ class ListGames extends Component
 
     public function selectPlayers($game_id)
     {
-        $this->game_select = Game::select('games.*', 't1.name AS t1_name', 't2.name AS t2_name')
+        $this->game_select = json_decode(json_encode(DB::table('games AS g')
+            ->select('g.*', 't1.name AS t1_name', 't2.name AS t2_name')
             ->join('teams AS t1', 'team1_id', 't1.id')
             ->join('teams AS t2', 'team2_id', 't2.id')
-            ->where('games.id', $game_id)
-            ->first();
+            ->where('g.id', $game_id)
+            ->get()[0]), true);
 
-        $team1_players = Player::where('team_id', $this->game_select->team1_id)->get();
-        $team2_players = Player::where('team_id', $this->game_select->team2_id)->get();
+        $team1_players = Player::where('team_id', $this->game_select['team1_id'])->get();
+        $team2_players = Player::where('team_id', $this->game_select['team2_id'])->get();
 
         $this->join_players = [];
 
@@ -111,6 +112,45 @@ class ListGames extends Component
         }
 
         $this->emit('showModalSelectPlay');
+    }
+
+    public function play()
+    {
+        $this->error_play = '';
+
+        if (count($this->team1_players) > 5) {
+            $this->error_play = 'Debe seleccionar máximo 5 jugadores de ' . $this->game_select['t1_name'];
+        }
+
+        if (count($this->team2_players) > 5) {
+            $this->error_play .= ' debe seleccionar máximo 5 jugadores de ' . $this->game_select['t2_name'];
+        }
+
+        if (count($this->team1_players) < 6 && count($this->team2_players) < 6) {
+
+            $game = Game::find($this->game_select['id']);
+            $game_items = [];
+
+            foreach ($this->team1_players as $key => $value) {
+                array_push($game_items, [
+                    'player_id' => $value,
+                    'entered_in' => 'inicio'
+                ]);
+            }
+
+            foreach ($this->team2_players as $key => $value) {
+                array_push($game_items, [
+                    'player_id' => $value,
+                    'entered_in' => 'inicio'
+                ]);
+            }
+
+            $game->gameitems()->createMany($game_items);
+            $game->state = 'jugando';
+            $game->save();
+
+            return redirect()->route('partido', $this->game_select['id']);
+        }
     }
 
     public function create()
@@ -135,9 +175,7 @@ class ListGames extends Component
                     'progress_id' => Progress::first()->id,
                     'date' => $this->game->date,
                     'time' => $this->game->time,
-                    'team1_goal' => $this->game->team1_goal === null ? 0 : $this->game->team1_goal,
-                    'team2_goal' => $this->game->team2_goal === null ? 0 : $this->game->team2_goal,
-                    'played' => $this->game->played === null ? false : true
+                    'state' => 'creado'
                 ]);
             }
             $this->emit('closeModal');
@@ -156,78 +194,5 @@ class ListGames extends Component
     public function delete(Game $game)
     {
         $game->delete();
-    }
-
-    //Genera el horario del grupo seleccionado
-    public function generarHorario()
-    {
-        if ($this->group_id !== '') {
-            $equipos = Team::select('teams.id', 'teams.group_id AS grupo')
-                ->where('group_id', $this->group_id)
-                ->orderBy('grupo')->get();
-            $fechaJornada = Carbon::now();
-
-            $array = array();
-            $grupo = array();
-
-            for ($k = 0; $k < count($equipos); $k++) {
-
-                array_push($grupo, $equipos[$k]);
-
-                if ($k === count($equipos) - 1 || ($equipos[$k]->grupo !== $equipos[$k + 1]->grupo)) {
-                    if (count($grupo) % 2 !== 0) {
-                        $auxEquipo = [
-                            'id' => 0,
-                            'gruop_id' => $grupo[count($grupo) - 1]->grupo
-                        ];
-                        $auxEquipo = json_encode($auxEquipo);
-                        $auxEquipo = json_decode($auxEquipo);
-                        array_push($grupo, $auxEquipo);
-                    }
-
-                    for ($i = 0; $i < count($grupo) - 1; $i++) {
-                        for ($j = 0; $j < count($grupo) / 2; $j++) {
-                            $objeto = [
-                                'team1_id' => $grupo[$j]->id,
-                                'team2_id' => $grupo[count($grupo) - 1 - $j]->id,
-                                'date' => $fechaJornada->toDateString(),
-                                'time' => $fechaJornada->toTimeString(),
-                                'team1_goal' => 0,
-                                'team2_goal' => 0,
-                                'played' => false
-                            ];
-                            array_push($array, $objeto);
-                        }
-                        $grupo = $this->girar($grupo);
-                        $fechaJornada->addDays(7);
-                    }
-                    $grupo = array();
-                }
-            }
-            $auxArray = array();
-            for ($i = 0; $i < count($array); $i++) {
-                if ($array[$i]['team2_id'] !== 0) {
-                    array_push($auxArray, $array[$i]);
-                }
-            }
-
-            Progress::first()->games()->createMany($auxArray);
-        }
-    }
-
-    private function girar($array)
-    {
-        $auxArray = array();
-        $aux = $array[0];
-
-        for ($i = 0; $i < count($array) - 2; $i++) {
-            // $auxArray[$i] = $array[$i + 1];
-            array_push($auxArray, $array[$i + 1]);
-        }
-        array_push($auxArray, $aux);
-
-        array_push($auxArray, $array[count($array) - 1]);
-
-        return $auxArray;
     }
 }

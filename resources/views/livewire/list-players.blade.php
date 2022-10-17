@@ -63,10 +63,11 @@
         <x-adminlte-input name="player.first_name" wire:model.defer="player.first_name" label="Nombre" placeholder="Juan" igroup-size="sm" fgroup-class="col-md" disable-feedback />
         <x-jet-input-error for="player.first_name" />
 
-        <x-adminlte-input name="player.t_shirt" wire:model.defer="player.t_shirt" label="Número de camiseta" placeholder="10" igroup-size="sm" fgroup-class="col-md" disable-feedback />
 
         <x-adminlte-input name="player.last_name" wire:model.defer="player.last_name" label="Apellido" placeholder="Andrade" igroup-size="sm" fgroup-class="col-md" disable-feedback />
         <x-jet-input-error for="player.last_name" />
+
+        <x-adminlte-input name="player.t_shirt" wire:model.defer="player.t_shirt" label="Número de camiseta" placeholder="10" igroup-size="sm" fgroup-class="col-md" disable-feedback />
 
         <x-adminlte-input id="mifecha" name="player.date_of_birth" wire:model.defer="player.date_of_birth" label="Fecha de nacimiento" placeholder="1990-05-21" igroup-size="sm" fgroup-class="col-md" disable-feedback />
 
