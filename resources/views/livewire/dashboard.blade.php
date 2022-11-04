@@ -3,7 +3,7 @@
 
     <div class="row">
         <div class="col-md-6 col-lg-3">
-            <x-adminlte-small-box title="${{ $sum_inscriptions }}" text="Inscripciones" icon="fas fa-sm fa-money-bill-wave text-white" theme="success" url="{{ url('clubes') }}" url-text="Ver todos los clubes" />
+            <x-adminlte-small-box title="${{ $sum_inscriptions }}" text="Inscripciones" icon="fas fa-sm fa-money-bill-wave text-white" theme="success" url="#" url-text="." />
         </div>
         <div class="col-md-6 col-lg-3">
             <x-adminlte-small-box title="{{ $teams }}" text="Clubes registrados" icon="fas fa-medal text-white" theme="teal" url="{{ url('seleccionar_categoria/clubes') }}" url-text="Ver todos los clubes" />
